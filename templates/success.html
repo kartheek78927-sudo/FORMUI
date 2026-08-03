@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submission Successful</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="page-wrapper success-wrapper">
+        <div class="form-container success-card">
+            <div class="header">
+                <h1>Thank You!</h1>
+                <p>Your details are submitted successfully.</p>
+            </div>
+            <div class="summary-card">
+                {% for label, value in user_data.items() %}
+                <div class="summary-row">
+                    <span class="summary-label">{{ label.replace('_', ' ')|title }}:</span>
+                    <span class="summary-value">{{ value }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            <a href="{{ url_for('index') }}" class="submit-button back-link">Submit another response</a>
+        </div>
+    </div>
+</body>
+</html>

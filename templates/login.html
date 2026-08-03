@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login with OTP</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="form-container">
+            <div class="header">
+                <h1>Hospital Login</h1>
+                <p>Enter your email or phone number to receive a one-time password.</p>
+            </div>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="flash-messages">
+                  {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+            <form action="{{ url_for('login') }}" method="post" class="user-form">
+                <div class="field-row">
+                    <label for="contact">Email or Phone</label>
+                    <input type="text" id="contact" name="contact" placeholder="jane@example.com or +1234567890" required>
+                </div>
+                <button type="submit" class="submit-button">Send OTP</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

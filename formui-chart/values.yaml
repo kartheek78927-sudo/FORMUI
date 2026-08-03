@@ -1,0 +1,46 @@
+appName: formui
+namespace: webapplication
+
+replicaCount: 2
+
+containerPort: 8080
+
+image:
+  repository: manjunath123456789/hospitalform
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 8080
+  targetPort: 8080
+  nodePort: 30080
+
+env:
+  FLASK_ENV: production
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "100m"
+  limits:
+    memory: "256Mi"
+    cpu: "500m"
+
+probes:
+  readiness:
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    failureThreshold: 3
+  liveness:
+    initialDelaySeconds: 15
+    periodSeconds: 20
+    failureThreshold: 3
+
+volumeMounts:
+  - name: formui-storage
+    mountPath: /data
+
+volumes:
+  - name: formui-storage
+    emptyDir: {}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="form-container">
+            <div class="header">
+                <h1>OTP Verification</h1>
+                <p>Enter the code sent to {{ contact }} to continue.</p>
+            </div>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="flash-messages">
+                  {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+            <div class="otp-card">
+                <p class="otp-hint">Demo OTP: <strong>{{ otp }}</strong></p>
+            </div>
+            <form action="{{ url_for('verify') }}" method="post" class="user-form">
+                <div class="field-row">
+                    <label for="otp_code">OTP Code</label>
+                    <input type="text" id="otp_code" name="otp_code" placeholder="Enter OTP" required>
+                </div>
+                <button type="submit" class="submit-button">Verify OTP</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

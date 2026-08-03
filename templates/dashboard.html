@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="form-container">
+            <div class="header">
+                <h1>Welcome Back</h1>
+                <p>Your session is active. Continue to submit form details.</p>
+            </div>
+            <div class="summary-card">
+                <div class="summary-row">
+                    <span class="summary-label">Logged in as</span>
+                    <span class="summary-value">{{ user_contact }}</span>
+                </div>
+            </div>
+            <a href="{{ url_for('index') }}" class="submit-button">Go to Form</a>
+            <a href="{{ url_for('logout') }}" class="text-button logout-link">Logout</a>
+        </div>
+    </div>
+</body>
+</html>
