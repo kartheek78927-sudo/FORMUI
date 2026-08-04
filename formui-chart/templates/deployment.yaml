@@ -18,10 +18,6 @@ spec:
       labels:
         app: {{ .Values.appName }}
 
-    spec:
-      imagePullSecrets:
-        - name: docker-registry
-
       containers:
         - name: formui
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
