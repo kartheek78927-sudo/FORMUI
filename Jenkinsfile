@@ -1,44 +1,104 @@
 pipeline {
-  agent any
+    agent any
 
-  parameters {
-    string(name: 'IMAGE_TAG', defaultValue: 'manual-build', description: 'Docker image tag to build and push')
-    string(name: 'DOCKER_REPO', defaultValue: 'manjunath123456789/hospitalform', description: 'Docker Hub repository')
-  }
+    parameters {
+        string(
+            name: 'IMAGE_TAG',
+            defaultValue: 'manual-build',
+            description: 'Docker Image Tag'
+        )
 
-  environment {
-    DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
-  }
-
-  stages {
-    stage('Checkout') {
-      steps {
-        checkout scm
-      }
+        string(
+            name: 'DOCKER_REPO',
+            defaultValue: 'manjunath123456789/hospitalform',
+            description: 'Docker Hub Repository'
+        )
     }
 
-    stage('Build Docker image') {
-      steps {
-        sh "docker build -t ${params.DOCKER_REPO}:${params.IMAGE_TAG} ."
-      }
+    environment {
+        // Jenkins Credentials ID
+        DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
+
+        // Docker Variables
+        DOCKER_REPO = "${params.DOCKER_REPO}"
+        IMAGE_TAG = "${params.IMAGE_TAG}"
+        IMAGE_NAME = "${params.DOCKER_REPO}:${params.IMAGE_TAG}"
+
+        // Helm
+        HELM_CHART = "formui-chart"
     }
 
-    stage('Push to Docker Hub') {
-      steps {
-        withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-          sh '''
-            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-            docker push ${DOCKER_REPO}:${IMAGE_TAG}
-          '''
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
         }
-      }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                    echo "Building Docker Image..."
+                    docker build -t ${IMAGE_NAME} .
+                '''
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: "${DOCKER_CREDENTIALS_ID}",
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    '''
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                sh '''
+                    echo "Pushing Docker Image..."
+                    docker push ${IMAGE_NAME}
+                '''
+            }
+        }
+
+        stage('Helm Lint') {
+            steps {
+                sh '''
+                    helm lint ${HELM_CHART}
+                '''
+            }
+        }
+
+        stage('Package Helm Chart') {
+            steps {
+                sh '''
+                    helm package ${HELM_CHART}
+                '''
+            }
+        }
     }
 
-    stage('Package Helm Chart') {
-      steps {
-        sh 'helm lint formui-chart'
-        sh 'helm package formui-chart'
-      }
+    post {
+        success {
+            echo "Pipeline Completed Successfully."
+        }
+
+        failure {
+            echo "Pipeline Failed."
+        }
+
+        always {
+            sh 'docker logout || true'
+            cleanWs()
+        }
     }
-  }
 }
