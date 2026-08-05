@@ -7,7 +7,7 @@ containerPort: 8080
 
 image:
   repository: manjunath123456789/hospitalform
-  tag: latest
+  tag: manual-build
   pullPolicy: IfNotPresent
 
 service:
