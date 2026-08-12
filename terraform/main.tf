@@ -61,7 +61,7 @@ resource "aws_route_table_association" "public" {
 
 # NAT Gateway for private subnet internet egress
 resource "aws_eip" "nat" {
-  vpc = true
+  domain = "vpc"
   tags = merge(var.tags, { Name = "learning-nat-eip" })
 }
 
