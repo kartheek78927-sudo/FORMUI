@@ -126,6 +126,7 @@ resource "aws_security_group" "instance_sg" {
 
 # EC2 instance in a public subnet for testing
 resource "aws_instance" "test" {
+  key_name                    = var.key_name
   ami                         = var.instance_ami
   instance_type               = var.instance_type
   subnet_id                   = element(values(aws_subnet.public), 0).id

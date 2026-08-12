@@ -56,3 +56,9 @@ variable "tags" {
     Owner   = "devops-learner"
   }
 }
+
+variable "key_name" {
+  description = "EC2 SSH key pair name"
+  type        = string
+  default     = "devops-project-key"
+}
