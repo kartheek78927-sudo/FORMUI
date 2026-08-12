@@ -1,0 +1,16 @@
+# Terraform files
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
+.terraform/
+crash.log
+
+# Python / project files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+
+# Docker
+docker-compose.override.yml
