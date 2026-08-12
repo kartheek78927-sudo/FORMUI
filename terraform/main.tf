@@ -12,9 +12,9 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "public" {
   for_each = toset(var.public_subnet_cidrs)
 
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = each.value
-  availability_zone = element(var.availability_zones, index(var.public_subnet_cidrs, each.value))
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = each.value
+  availability_zone       = element(var.availability_zones, index(var.public_subnet_cidrs, each.value))
   map_public_ip_on_launch = true
   tags = merge(var.tags, {
     Name = "public-subnet-${each.key}"
@@ -62,13 +62,13 @@ resource "aws_route_table_association" "public" {
 # NAT Gateway for private subnet internet egress
 resource "aws_eip" "nat" {
   domain = "vpc"
-  tags = merge(var.tags, { Name = "learning-nat-eip" })
+  tags   = merge(var.tags, { Name = "learning-nat-eip" })
 }
 
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat.id
   subnet_id     = element(values(aws_subnet.public), 0).id
-  tags = merge(var.tags, { Name = "learning-nat" })
+  tags          = merge(var.tags, { Name = "learning-nat" })
 }
 
 # Private route table with NAT Gateway route
@@ -98,11 +98,11 @@ resource "aws_security_group" "instance_sg" {
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    description      = "SSH from anywhere for learning only"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = [var.ssh_cidr]
+    description = "SSH from anywhere for learning only"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.ssh_cidr]
   }
 
   ingress {
@@ -126,10 +126,10 @@ resource "aws_security_group" "instance_sg" {
 
 # EC2 instance in a public subnet for testing
 resource "aws_instance" "test" {
-  ami                    = var.instance_ami
-  instance_type          = var.instance_type
-  subnet_id              = element(values(aws_subnet.public), 0).id
-  vpc_security_group_ids = [aws_security_group.instance_sg.id]
+  ami                         = var.instance_ami
+  instance_type               = var.instance_type
+  subnet_id                   = element(values(aws_subnet.public), 0).id
+  vpc_security_group_ids      = [aws_security_group.instance_sg.id]
   associate_public_ip_address = true
 
   tags = merge(var.tags, {
