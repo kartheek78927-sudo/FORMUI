@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/<your-username>/<your-repo>.git
+    repoURL: https://github.com/kartheek78927-sudo/FORMUI
     targetRevision: main
     path: formui-chart
     helm:
@@ -14,7 +14,7 @@ spec:
         - values.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: webapplication
+    namespace: formui-helm
   syncPolicy:
     automated:
       prune: true

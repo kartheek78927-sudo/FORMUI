@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    argocd.argoproj.io/tracking-id: formui:apps/Deployment:webapplication/formui-deployment
+    deployment.kubernetes.io/revision: "2"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"argocd.argoproj.io/tracking-id":"formui:apps/Deployment:webapplication/formui-deployment"},"labels":{"app":"formui"},"name":"formui-deployment","namespace":"webapplication"},"spec":{"replicas":2,"selector":{"matchLabels":{"app":"formui"}},"template":{"metadata":{"labels":{"app":"formui"}},"spec":{"containers":[{"env":[{"name":"FLASK_ENV","value":"production"}],"image":"manjunath123456789/hospitalform:manual-build","imagePullPolicy":"IfNotPresent","livenessProbe":{"failureThreshold":3,"httpGet":{"path":"/","port":8080},"initialDelaySeconds":15,"periodSeconds":20},"name":"formui","ports":[{"containerPort":8080}],"readinessProbe":{"failureThreshold":3,"httpGet":{"path":"/","port":8080},"initialDelaySeconds":5,"periodSeconds":10},"resources":{"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"100m","memory":"128Mi"}},"volumeMounts":[{"mountPath":"/data","name":"formui-storage"}]}],"volumes":[{"emptyDir":{},"name":"formui-storage"}]}}}}
+  creationTimestamp: "2026-08-04T16:07:13Z"
+  generation: 2
+  labels:
+    app: formui
+  name: formui-deployment
+  namespace: webapplication
+  resourceVersion: "28504"
+  uid: d465da63-1747-4fda-85a2-b7082937b304
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: formui
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: formui
+    spec:
+      containers:
+      - env:
+        - name: FLASK_ENV
+          value: production
+        image: manjunath123456789/hospitalform:manual-build
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: formui
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /data
+          name: formui-storage
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - emptyDir: {}
+        name: formui-storage
+status:
+  availableReplicas: 2
+  conditions:
+  - lastTransitionTime: "2026-08-05T20:12:02Z"
+    lastUpdateTime: "2026-08-05T20:13:54Z"
+    message: ReplicaSet "formui-deployment-bb6474445" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2026-08-13T07:48:33Z"
+    lastUpdateTime: "2026-08-13T07:48:33Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 2
+  readyReplicas: 2
+  replicas: 2
+  updatedReplicas: 2

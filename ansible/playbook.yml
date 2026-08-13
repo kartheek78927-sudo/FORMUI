@@ -1,0 +1,40 @@
+- name: Configure test EC2 instance
+  hosts: webservers
+  become: true
+  tasks:
+    - name: Install NGINX
+      ansible.builtin.yum:
+        name: nginx
+        state: present
+
+    - name: Ensure NGINX is started and enabled
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Update all the packages
+      dnf:
+        name: "*"
+        state: latest
+
+    - name: Install git 
+      dnf:
+        name: git
+        state: present
+
+
+    - name: Install Docker
+      dnf:
+        name: docker
+        state: present
+
+    - name: Start Docker
+      service:
+       name: docker
+       state: started
+
+    - name: Enable Docker at boot
+      service:
+       name: docker
+       enabled: true

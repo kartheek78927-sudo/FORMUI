@@ -19,6 +19,9 @@ spec:
         app: {{ .Values.appName }}
 
     spec:
+      imagePullSecrets:
+        - name: ecr-registry-secret  
+
       containers:
         - name: formui
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

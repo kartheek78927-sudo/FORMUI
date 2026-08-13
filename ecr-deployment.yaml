@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: ecr-formui
+  namespace: ecr-demo
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: ecr-formui
+
+  template:
+    metadata:
+      labels:
+        app: ecr-formui
+
+    spec:
+      imagePullSecrets:
+        - name: ecr-registry-secret
+
+      containers:
+        - name: formui
+          image: 658548981904.dkr.ecr.ap-south-1.amazonaws.com/formui:1.0
+          ports:
+            - containerPort: 8080
