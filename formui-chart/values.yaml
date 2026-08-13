@@ -1,7 +1,7 @@
 appName: formui
 namespace: formui-helm
 
-replicaCount: 3
+replicaCount: 4
 
 containerPort: 8080
 
